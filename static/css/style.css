@@ -1,0 +1,53 @@
+body {
+    background-color: rgb(26, 24, 24);
+    color: rgb(75, 154, 153);
+}
+
+legend {
+    font-size: 100%;
+}
+
+input[type="url"], input[type="ip"], input[type="number"], input[type="text"] {
+    background-color: rgb(26, 24, 24);
+    width: 85%;
+    border: 1px solid rgb(95, 97, 94);
+    color: rgb(75, 154, 153);
+}
+
+input[type="button"] {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(347deg, rgba(2, 0, 36, 1) 0%, rgba(8, 8, 8, 1) 0%, rgba(94, 94, 94, 1) 100%);
+    color: rgb(75, 154, 153);
+}
+
+input[type="button"]:hover {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(149deg, rgba(2, 0, 36, 1) 0%, rgba(8, 8, 8, 1) 0%, rgba(94, 94, 94, 1) 100%);
+    color: rgb(75, 154, 153);
+}
+
+.border-green {
+    border: 1px solid rgb(75, 154, 153);
+}
+
+.ml-url {
+    margin-left: 17px;
+}
+
+.ml-1 {
+    margin-left: 15px;
+}
+
+.mb-01{
+    padding-top: 7.5px;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+#btn-start{
+    width: 90%;
+    height: 225%;
+}
+
