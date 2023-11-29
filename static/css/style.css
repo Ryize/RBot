@@ -14,7 +14,7 @@ input[type="url"], input[type="ip"], input[type="number"], input[type="text"] {
     color: rgb(75, 154, 153);
 }
 
-input[type="button"] {
+input[type="button"], input[type="submit"] {
     background: rgb(2, 0, 36);
     background: linear-gradient(347deg, rgba(2, 0, 36, 1) 0%, rgba(8, 8, 8, 1) 0%, rgba(94, 94, 94, 1) 100%);
     color: rgb(75, 154, 153);

@@ -106,27 +106,34 @@ function clear_status_check() {
 
 function base_attack() {
     let timeout = document.getElementsByName('timeout')[0].value;
-    let msg_tcp_udp = document.getElementsByName('msg_tcp_udp')[0].value;
-    let port = document.getElementsByName('port')[0].value;
+    let msg_tcp_udp = document.getElementsByName('msg_tcp_udp1')[0].value;
+    let port = document.getElementsByName('port1')[0].value;
     let max_thread = document.getElementsByName('max_thread')[0].value;
 
     document.getElementsByName('timeout_')[0].value = timeout;
     document.getElementsByName('msg_tcp_udp_')[0].value = msg_tcp_udp;
     document.getElementsByName('port_')[0].value = port;
     document.getElementsByName('max_thread_')[0].value = max_thread;
+    document.getElementsByName('smart_')[0].value = false;
 }
 
 function smart_attack() {
     let percent = document.getElementsByName('percent')[0].value;
-    let msg_tcp_udp = document.getElementsByName('msg_tcp_udp')[0].value;
-    let port = document.getElementsByName('port')[0].value;
+    let msg_tcp_udp = document.getElementsByName('msg_tcp_udp2')[0].value;
+    let port = document.getElementsByName('port2')[0].value;
 
     document.getElementsByName('percent_')[0].value = percent;
     document.getElementsByName('msg_tcp_udp_')[0].value = msg_tcp_udp;
     document.getElementsByName('port_')[0].value = port;
+    document.getElementsByName('smart_')[0].value = true;
 }
 
 function start() {
+    if (document.getElementById('btn-start').value === 'Стоп'){
+        document.getElementsByName('stop_')[0].value = '1';
+    } else{
+        document.getElementsByName('stop_')[0].value = '0';
+    }
     let host = '';
     let url = document.getElementsByName('url')[0];
     let ip = document.getElementsByName('ip')[0];
@@ -140,14 +147,17 @@ function start() {
     let method = ''
     for (let i = 0; i < btns.length; i++) {
         if (btns[i].checked === true) {
-            method = btns[i]
+            method = btns[i].value;
         }
     }
     document.getElementsByName('host_')[0].value = host;
     document.getElementsByName('method_')[0].value = method;
-    base_attack()
-    smart_attack()
-
+    let base = document.getElementById('base');
+    if (base.style.display === 'none') {
+        smart_attack()
+    } else {
+        base_attack();
+    }
     document.getElementById('send_form').submit();
 }
 
