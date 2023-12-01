@@ -4,8 +4,7 @@ from app import db, app
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mac = db.Column(db.String(48), unique=True)
-    ip = db.Column(db.String(48), unique=True)
-    address = db.Column(db.Text())
+    ip = db.Column(db.String(48))
     internet_speed = db.Column(db.Text())
     last_seen = db.Column(db.Text())
 

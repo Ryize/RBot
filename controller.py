@@ -54,7 +54,8 @@ def start():
                            max_thread=max_thread,
                            percent=percent,
                            users=users,
-                           last_seen_max=last_seen_max)
+                           last_seen_max=last_seen_max,
+                           )
 
 
 @app.route('/stop', methods=['GET', 'POST'])
@@ -67,3 +68,38 @@ def stop():
     db.session.commit()
     return render_template('index.html', users=users,
                            last_seen_max=last_seen_max)
+
+
+@app.route('/api/checkin/<mac_address>/<internet_speed>',
+           methods=['GET', 'POST'])
+def checkin(mac_address, internet_speed):
+    user = User.query.filter_by(mac=mac_address).all()
+    if len(user):
+        db.session.delete(user)
+        db.session.commit()
+    ip = request.remote_addr
+    user = User(mac=mac_address, ip=ip, internet_speed=internet_speed,
+                last_seen=time.time())
+    db.session.add(user)
+    db.session.commit()
+
+
+@app.route('/api/attack', methods=['POST'])
+def attack():
+    try:
+        attack = Attack.query.all()[-1]
+        return jsonify({
+            'id': attack.id,
+            'host': attack.host,
+            'method': attack.method,
+            'smart': attack.smart,
+            'timeout': attack.timeout,
+            'msg_tcp_udp': attack.msg_tcp_udp,
+            'port': attack.port,
+            'max_thread': attack.max_thread,
+            'percent': attack.percent,
+        })
+    except IndexError:
+        return jsonify({
+            'status': False,
+        })

@@ -19,25 +19,38 @@ function change_method() {
         }
     }
     let status = btn.value !== 'udp' && btn.value !== 'tcp';
-    msg_tcp_udp = document.getElementsByName('msg_tcp_udp')
-    for (let i = 0; i < msg_tcp_udp.length; i++) {
-        msg_tcp_udp[i].disabled = status;
-        if (status) {
-            msg_tcp_udp[i].style = 'color: rgba(75, 154, 153, 0.5)';
-        } else {
-            msg_tcp_udp[i].style = 'color: rgb(75, 154, 153)';
-        }
+    let msg_tcp_udp1 = document.getElementsByName('msg_tcp_udp1')[0];
+    let msg_tcp_udp2 = document.getElementsByName('msg_tcp_udp2')[0];
 
+    let port1 = document.getElementsByName('port1')[0];
+    let port2 = document.getElementsByName('port2')[0];
 
+    msg_tcp_udp1.disabled = status;
+    msg_tcp_udp2.disabled = status;
+    if (status) {
+        msg_tcp_udp1.style = 'color: rgba(75, 154, 153, 0.5)';
+        msg_tcp_udp2.style = 'color: rgba(75, 154, 153, 0.5)';
+
+        port1.style = 'color: rgba(75, 154, 153, 0.5)';
+        port2.style = 'color: rgba(75, 154, 153, 0.5)';
+    } else {
+        msg_tcp_udp1.style = 'color: rgb(75, 154, 153)';
+        msg_tcp_udp2.style = 'color: rgb(75, 154, 153)';
+
+        port1.style = 'color: rgb(75, 154, 153)';
+        port2.style = 'color: rgb(75, 154, 153)';
     }
-    port = document.getElementsByName('port')
-    for (let i = 0; i < port.length; i++) {
-        port[i].disabled = status;
-        if (status) {
-            port[i].style = 'color: rgba(75, 154, 153, 0.5)';
-        } else {
-            port[i].style = 'color: rgb(75, 154, 153)';
-        }
+
+
+}
+
+port = document.getElementsByName('port')
+for (let i = 0; i < port.length; i++) {
+    port[i].disabled = status;
+    if (status) {
+        port[i].style = 'color: rgba(75, 154, 153, 0.5)';
+    } else {
+        port[i].style = 'color: rgb(75, 154, 153)';
     }
 }
 
@@ -129,9 +142,9 @@ function smart_attack() {
 }
 
 function start() {
-    if (document.getElementById('btn-start').value === 'Стоп'){
+    if (document.getElementById('btn-start').value === 'Стоп') {
         document.getElementsByName('stop_')[0].value = '1';
-    } else{
+    } else {
         document.getElementsByName('stop_')[0].value = '0';
     }
     let host = '';

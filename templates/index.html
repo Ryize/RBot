@@ -164,24 +164,21 @@
             <fieldset class="border-green w-100">
                 <legend>4. Подконтрольные устройства</legend>
                 <div class="row">
-                    {% for user in users %}
-                        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
+                    {% for user in users|reverse %}
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
                             <input class="border-0" type="text" id="scales"
                                    name="mac_address" value="{{ user.mac }}"
                                    disabled/>
                         </div>
-                        <div class="col-xs-2 col-sm-3 col-md-3 col-lg-2">
+                        <div class="col-xs-2 col-sm-3 col-md-4 col-lg-3">
                             <label>{{ user.ip }}</label>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                            <label>{{ user.address }}</label>
-                        </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
-                        {% if user.last_seen < last_seen_max %}
-                            <label>В сети</label>
-                        {% else %}
-                        <label>Не в сети</label>
-                        {% endif %}
+                        <div class="col-xs-2 col-sm-2 col-md-3 col-lg-2">
+                            {% if user.last_seen|float > last_seen_max %}
+                                <label>В сети</label>
+                            {% else %}
+                                <label>Не в сети</label>
+                            {% endif %}
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-end">
                             <label class="cursor-pointer"
@@ -228,14 +225,15 @@
         if (re.test("{{ host }}")) {
             ip.value = "{{ host }}";
             url.disabled = true;
+            url.placeholder = 'Не более 1 адреса';
         } else {
             url.value = "{{ host }}";
             ip.disabled = true;
+            ip.placeholder = 'Не более 1 адреса';
         }
 
         let btns = document.getElementsByName('method');
         for (let i = 0; i < btns.length; i++) {
-            console.log("{{ method }}")
             if (btns[i].value.toLowerCase() === "{{ method }}") {
                 btns[i].checked = true;
             }
@@ -257,6 +255,7 @@
         document.getElementsByName('timeout')[0].value = "{{ timeout }}"
         document.getElementsByName('max_thread')[0].value = "{{ max_thread }}";
         document.getElementsByName('percent')[0].value = "{{ percent }}";
+        change_method()
     </script>
 {% endif %}
 
