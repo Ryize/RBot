@@ -3,7 +3,7 @@ import time
 from flask import render_template, request, jsonify
 
 from app import app, db
-from models import Attack, User
+from models import Attack, User, Code
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -75,13 +75,17 @@ def stop():
 def checkin(mac_address, internet_speed):
     user = User.query.filter_by(mac=mac_address).all()
     if len(user):
-        db.session.delete(user)
+        print(user[0])
+        db.session.delete(user[0])
         db.session.commit()
     ip = request.remote_addr
     user = User(mac=mac_address, ip=ip, internet_speed=internet_speed,
                 last_seen=time.time())
     db.session.add(user)
     db.session.commit()
+    return jsonify({
+        'status': True,
+    })
 
 
 @app.route('/api/attack', methods=['POST'])
@@ -89,6 +93,7 @@ def attack():
     try:
         attack = Attack.query.all()[-1]
         return jsonify({
+            'status': True,
             'id': attack.id,
             'host': attack.host,
             'method': attack.method,
@@ -103,3 +108,12 @@ def attack():
         return jsonify({
             'status': False,
         })
+
+
+@app.route('/api/get_code')
+def get_code():
+    code = Code.query.all()[-1]
+    return jsonify({
+        'code': code.code,
+    })
+
