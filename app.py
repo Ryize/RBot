@@ -14,4 +14,4 @@ from controller import *
 if __name__ == '__main__':
     from controller import *
 
-    app.run(port=50001)
+    app.run(port=5001)

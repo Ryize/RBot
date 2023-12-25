@@ -111,3 +111,21 @@ def get_code():
     return jsonify({
         'code': code.code,
     })
+
+
+@app.route('/api/users', methods=['POST'])
+def get_users():
+    users = User.query.order_by(User.last_seen.desc()).all()
+    result = {}
+    last_seen_max = time.time() - 2 * 60
+    for i, user in enumerate(users):
+        result[i] = {
+            'mac': user.mac,
+            'ip': user.ip,
+            'internet_speed': float(user.internet_speed),
+            'last_seen': user.last_seen,
+            'online': float(user.last_seen) > last_seen_max
+        }
+    return jsonify({
+        'users': result,
+    })

