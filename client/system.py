@@ -35,7 +35,7 @@ except ImportError:
 
 from uuid import getnode as get_mac
 
-SITE = 'http://noc1.site/api'
+SITE = 'http://example.ru/api'
 
 REGEXP_IP = r'^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$'
 
